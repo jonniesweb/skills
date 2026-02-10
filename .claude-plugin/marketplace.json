@@ -11,14 +11,14 @@
   "plugins": [
     {
       "name": "beads-workflow",
-      "source": "beads-workflow",
+      "source": "./plugins/beads-workflow",
       "description": "Task management workflow skills using the beads (bd) CLI",
       "version": "0.1.0",
       "keywords": ["beads", "task-management", "workflow"]
     },
     {
       "name": "retro",
-      "source": "retro",
+      "source": "./plugins/retro",
       "description": "Session retrospective skill for reflecting on conversations",
       "version": "0.1.0",
       "keywords": ["retrospective", "reflection"]
