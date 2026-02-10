@@ -1,0 +1,12 @@
+{
+  "name": "jonniesweb-skills",
+  "owner": {
+    "name": "Jon Simpson"
+  },
+  "metadata": {
+    "description": "A collection of Claude Code skills and plugins by jonniesweb",
+    "version": "0.1.0",
+    "pluginRoot": "./plugins"
+  },
+  "plugins": []
+}
