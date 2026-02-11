@@ -5,20 +5,19 @@
   },
   "metadata": {
     "description": "A collection of Claude Code skills and plugins by jonniesweb",
-    "version": "0.1.0",
-    "pluginRoot": "./plugins"
+    "version": "0.1.0"
   },
   "plugins": [
     {
       "name": "beads-workflow",
-      "source": "./plugins/beads-workflow",
+      "source": "./beads-workflow",
       "description": "Task management workflow skills using the beads (bd) CLI",
       "version": "0.1.0",
       "keywords": ["beads", "task-management", "workflow"]
     },
     {
       "name": "retro",
-      "source": "./plugins/retro",
+      "source": "./retro",
       "description": "Session retrospective skill for reflecting on conversations",
       "version": "0.1.0",
       "keywords": ["retrospective", "reflection"]
