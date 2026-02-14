@@ -21,6 +21,13 @@
       "description": "Session retrospective skill for reflecting on conversations",
       "version": "0.1.0",
       "keywords": ["retrospective", "reflection"]
+    },
+    {
+      "name": "cxdb-logger",
+      "source": "./cxdb-logger",
+      "description": "Logs Claude Code sessions to CXDB context store",
+      "version": "0.1.0",
+      "keywords": ["cxdb", "logging", "observability"]
     }
   ]
 }

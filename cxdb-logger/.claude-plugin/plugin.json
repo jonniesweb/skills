@@ -1,0 +1,5 @@
+{
+  "name": "cxdb-logger",
+  "version": "0.1.0",
+  "description": "Logs Claude Code sessions to CXDB context store"
+}
