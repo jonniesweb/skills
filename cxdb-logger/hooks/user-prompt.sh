@@ -2,10 +2,8 @@
 # Log user prompts to CXDB
 set -uo pipefail
 
-WRITER="$HOME/bin/cxdb-writer"
+CXDB_HTTP="${CXDB_HTTP:-http://localhost:9080}"
 SESSION_DIR="/tmp/cxdb-sessions"
-
-[[ -x "$WRITER" ]] || exit 0
 
 INPUT=$(cat)
 SESSION_ID=$(echo "$INPUT" | jq -r '.session_id // empty')
@@ -22,11 +20,12 @@ if [[ ${#PROMPT} -gt 4000 ]]; then
   PROMPT="${PROMPT:0:4000}... [truncated]"
 fi
 
-"$WRITER" append \
-  -context "$CONTEXT_ID" \
-  -role user \
-  -text "$PROMPT" \
-  -type-id "claude-code.UserPrompt" \
-  -type-version 1 2>/dev/null || true
+curl -sf -X POST "$CXDB_HTTP/v1/contexts/$CONTEXT_ID/append" \
+  -H 'Content-Type: application/json' \
+  -d "$(jq -n --arg content "$PROMPT" '{
+    type_id: "claude-code.UserPrompt",
+    type_version: 1,
+    data: { role: "user", content: $content }
+  }')" 2>/dev/null || true
 
 exit 0

@@ -2,11 +2,8 @@
 # Create a CXDB context for this Claude Code session
 set -uo pipefail
 
-WRITER="$HOME/bin/cxdb-writer"
+CXDB_HTTP="${CXDB_HTTP:-http://localhost:9080}"
 SESSION_DIR="/tmp/cxdb-sessions"
-
-# Fail silently if cxdb-writer not available
-[[ -x "$WRITER" ]] || exit 0
 
 # Read hook input from stdin
 INPUT=$(cat)
@@ -18,21 +15,41 @@ mkdir -p "$SESSION_DIR"
 # If context already exists for this session, skip
 [[ -f "$SESSION_DIR/$SESSION_ID" ]] && exit 0
 
-# Create a new CXDB context
-OUTPUT=$("$WRITER" create-context 2>/dev/null) || exit 0
-CONTEXT_ID=$(echo "$OUTPUT" | sed -n 's/.*context_id=\([0-9]*\).*/\1/p')
+# Create a new CXDB context via HTTP API
+CONTEXT_ID=$(curl -sf -X POST "$CXDB_HTTP/v1/contexts/create" \
+  -H 'Content-Type: application/json' \
+  -d '{}' 2>/dev/null | jq -r '.context_id // empty') || exit 0
 [[ -n "$CONTEXT_ID" ]] || exit 0
 
 echo "$CONTEXT_ID" > "$SESSION_DIR/$SESSION_ID"
 
+# Publish registry bundle (idempotent - 204 if already exists with same content)
+BUNDLE_FILE="${CLAUDE_PLUGIN_ROOT:-$(dirname "$(dirname "$0")")}/registry-bundle.json"
+if [[ -f "$BUNDLE_FILE" ]]; then
+  BUNDLE_ID=$(jq -r '.bundle_id' "$BUNDLE_FILE" 2>/dev/null)
+  curl -sf -X PUT "$CXDB_HTTP/v1/registry/bundles/$BUNDLE_ID" \
+    -H 'Content-Type: application/json' \
+    -d @"$BUNDLE_FILE" 2>/dev/null || true
+fi
+
 # Log the session start as the first turn
 CWD=$(echo "$INPUT" | jq -r '.cwd // "unknown"')
 SOURCE=$(echo "$INPUT" | jq -r '.source // "startup"')
-"$WRITER" append \
-  -context "$CONTEXT_ID" \
-  -role system \
-  -text "Session started (source=$SOURCE, cwd=$CWD)" \
-  -type-id "claude-code.SessionStart" \
-  -type-version 1 2>/dev/null || true
+
+curl -sf -X POST "$CXDB_HTTP/v1/contexts/$CONTEXT_ID/append" \
+  -H 'Content-Type: application/json' \
+  -d "$(jq -n \
+    --arg source "$SOURCE" \
+    --arg cwd "$CWD" \
+    '{
+      type_id: "claude-code.SessionStart",
+      type_version: 2,
+      data: {
+        role: "system",
+        content: ("Session started (source=" + $source + ", cwd=" + $cwd + ")"),
+        source: $source,
+        cwd: $cwd
+      }
+    }')" 2>/dev/null || true
 
 exit 0

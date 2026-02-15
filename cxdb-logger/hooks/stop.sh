@@ -2,10 +2,8 @@
 # Log turn completion to CXDB
 set -uo pipefail
 
-WRITER="$HOME/bin/cxdb-writer"
+CXDB_HTTP="${CXDB_HTTP:-http://localhost:9080}"
 SESSION_DIR="/tmp/cxdb-sessions"
-
-[[ -x "$WRITER" ]] || exit 0
 
 INPUT=$(cat)
 SESSION_ID=$(echo "$INPUT" | jq -r '.session_id // empty')
@@ -16,11 +14,12 @@ CONTEXT_FILE="$SESSION_DIR/$SESSION_ID"
 CONTEXT_ID=$(cat "$CONTEXT_FILE")
 [[ -n "$CONTEXT_ID" ]] || exit 0
 
-"$WRITER" append \
-  -context "$CONTEXT_ID" \
-  -role system \
-  -text "--- turn complete ---" \
-  -type-id "claude-code.TurnComplete" \
-  -type-version 1 2>/dev/null || true
+curl -sf -X POST "$CXDB_HTTP/v1/contexts/$CONTEXT_ID/append" \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "type_id": "claude-code.TurnComplete",
+    "type_version": 1,
+    "data": { "role": "system", "content": "--- turn complete ---" }
+  }' 2>/dev/null || true
 
 exit 0

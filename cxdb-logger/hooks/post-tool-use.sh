@@ -2,10 +2,8 @@
 # Log tool calls and results to CXDB
 set -uo pipefail
 
-WRITER="$HOME/bin/cxdb-writer"
+CXDB_HTTP="${CXDB_HTTP:-http://localhost:9080}"
 SESSION_DIR="/tmp/cxdb-sessions"
-
-[[ -x "$WRITER" ]] || exit 0
 
 INPUT=$(cat)
 SESSION_ID=$(echo "$INPUT" | jq -r '.session_id // empty')
@@ -17,18 +15,25 @@ CONTEXT_ID=$(cat "$CONTEXT_FILE")
 [[ -n "$CONTEXT_ID" ]] || exit 0
 
 TOOL_NAME=$(echo "$INPUT" | jq -r '.tool_name // "unknown"')
-TOOL_INPUT=$(echo "$INPUT" | jq -c '.tool_input // {}' | head -c 1000)
-TOOL_RESPONSE=$(echo "$INPUT" | jq -c '.tool_response // {}' | head -c 1000)
+TOOL_INPUT=$(echo "$INPUT" | jq -c '.tool_input // {}' | head -c 4000)
+TOOL_RESPONSE=$(echo "$INPUT" | jq -c '.tool_response // {}' | head -c 4000)
 
-SUMMARY="Tool: $TOOL_NAME
-Input: $TOOL_INPUT
-Response: $TOOL_RESPONSE"
-
-"$WRITER" append \
-  -context "$CONTEXT_ID" \
-  -role assistant \
-  -text "$SUMMARY" \
-  -type-id "claude-code.ToolUse" \
-  -type-version 1 2>/dev/null || true
+curl -sf -X POST "$CXDB_HTTP/v1/contexts/$CONTEXT_ID/append" \
+  -H 'Content-Type: application/json' \
+  -d "$(jq -n \
+    --arg name "$TOOL_NAME" \
+    --arg input "$TOOL_INPUT" \
+    --arg resp "$TOOL_RESPONSE" \
+    '{
+      type_id: "claude-code.ToolUse",
+      type_version: 2,
+      data: {
+        role: "assistant",
+        content: ("Tool: " + $name),
+        tool_name: $name,
+        tool_input: $input,
+        tool_response: $resp
+      }
+    }')" 2>/dev/null || true
 
 exit 0

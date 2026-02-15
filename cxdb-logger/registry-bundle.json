@@ -1,0 +1,63 @@
+{
+  "registry_version": 1,
+  "bundle_id": "claude-code-v2",
+  "types": {
+    "claude-code.SessionStart": {
+      "versions": {
+        "1": {
+          "fields": {
+            "1": { "name": "role", "type": "string" },
+            "2": { "name": "content", "type": "string", "optional": true }
+          }
+        },
+        "2": {
+          "fields": {
+            "1": { "name": "role", "type": "string" },
+            "2": { "name": "content", "type": "string", "optional": true },
+            "3": { "name": "source", "type": "string" },
+            "4": { "name": "cwd", "type": "string" }
+          }
+        }
+      }
+    },
+    "claude-code.UserPrompt": {
+      "versions": {
+        "1": {
+          "fields": {
+            "1": { "name": "role", "type": "string" },
+            "2": { "name": "content", "type": "string", "optional": true }
+          }
+        }
+      }
+    },
+    "claude-code.ToolUse": {
+      "versions": {
+        "1": {
+          "fields": {
+            "1": { "name": "role", "type": "string" },
+            "2": { "name": "content", "type": "string", "optional": true }
+          }
+        },
+        "2": {
+          "fields": {
+            "1": { "name": "role", "type": "string" },
+            "2": { "name": "content", "type": "string", "optional": true },
+            "3": { "name": "tool_name", "type": "string" },
+            "4": { "name": "tool_input", "type": "string" },
+            "5": { "name": "tool_response", "type": "string" }
+          }
+        }
+      }
+    },
+    "claude-code.TurnComplete": {
+      "versions": {
+        "1": {
+          "fields": {
+            "1": { "name": "role", "type": "string" },
+            "2": { "name": "content", "type": "string", "optional": true }
+          }
+        }
+      }
+    }
+  }
+}
