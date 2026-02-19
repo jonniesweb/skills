@@ -10,8 +10,8 @@ Review the code modified in this branch for bugs, redundant code, or obvious ove
 ## Instructions
 
 1. Get the diff of changes in this branch compared to main:
-   - Run `git diff main...HEAD` to see all changes
-   - Run `git log main..HEAD --oneline` to see commits
+   - Run `git diff origin/main...HEAD` to see all changes
+   - Run `git log origin/main..HEAD --oneline` to see commits
 2. Review each changed file for:
    - Bugs or logic errors
    - Redundant or dead code
