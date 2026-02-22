@@ -1,6 +1,6 @@
 ---
 name: gepa
-description: Optimize any text artifact (code, prompts, configs, algorithms) using LLM-guided iterative search via the gepa CLI (github.com/jonniesweb/gepa). Use when asked to optimize something for speed, accuracy, compression, or any measurable quality — especially when it requires writing an evaluator, setting up a benchmark, or running multi-iteration optimization. Triggers include phrases like "optimize this with gepa", "use gepa to improve", "benchmark and optimize", or "set up a gepa run".
+description: Optimize any text artifact (code, prompts, configs, algorithms) using LLM-guided iterative search via the gepa CLI (github.com/jonniesweb/gepa-cli). Use when asked to optimize something for speed, accuracy, compression, or any measurable quality — especially when it requires writing an evaluator, setting up a benchmark, or running multi-iteration optimization. Triggers include phrases like "optimize this with gepa", "use gepa to improve", "benchmark and optimize", or "set up a gepa run".
 ---
 
 # gepa — Optimize Anything
@@ -10,7 +10,7 @@ description: Optimize any text artifact (code, prompts, configs, algorithms) usi
 ## Install
 
 ```bash
-go install github.com/jonniesweb/gepa/cmd/gepa@latest
+go install github.com/jonniesweb/gepa-cli/cmd/gepa@latest
 ```
 
 If `go` isn't on your PATH, install it first: https://go.dev/dl/
