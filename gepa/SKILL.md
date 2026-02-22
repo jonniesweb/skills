@@ -10,10 +10,17 @@ description: Optimize any text artifact (code, prompts, configs, algorithms) usi
 ## Install
 
 ```bash
-export GOROOT="/root/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.25.0.linux-amd64"
-export PATH="$GOROOT/bin:$PATH"
 go install github.com/jonniesweb/gepa/cmd/gepa@latest
 ```
+
+If `go` isn't on your PATH, install it first: https://go.dev/dl/
+The binary lands at `$(go env GOPATH)/bin/gepa` — make sure that's on your PATH.
+
+On this sandbox/root environment, Go may be under a module cache path. Find it with:
+```bash
+find /root/go /root/.asdf -name 'go' -type f 2>/dev/null | grep '/bin/go$' | head -3
+```
+Then either add the parent to PATH or call it directly.
 
 ## Three Modes
 
