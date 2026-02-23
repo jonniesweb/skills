@@ -33,7 +33,7 @@
       "name": "gepa",
       "source": {
         "source": "github",
-        "repo": "jonniesweb/gepa-cli",
+        "repo": "jonniesweb/gepa-cli"
       },
       "description": "LLM-guided optimizer for any text artifact using the gepa CLI",
       "version": "0.1.0",
