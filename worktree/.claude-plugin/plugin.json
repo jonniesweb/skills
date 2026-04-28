@@ -1,0 +1,5 @@
+{
+  "name": "worktree",
+  "version": "0.1.0",
+  "description": "Git worktree workflow skills: fix in a worktree + PR, rebase onto origin/main"
+}

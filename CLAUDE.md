@@ -32,6 +32,7 @@ Skill definitions use YAML frontmatter with `name` and `description` fields. Opt
 - **retro** — Session retrospective/reflection skill
 - **cxdb-logger** — Hook-based session logging to CXDB via HTTP API (no skills, only hooks)
 - **gepa** — LLM-guided optimization using the `gepa` CLI with evaluator protocol
+- **worktree** — 2 skills for git worktree workflow: `fix` (build a change in a worktree and open a PR) and `rebase` (fetch `origin/main` and rebase the current branch onto it)
 
 ## Shell Script Conventions
 

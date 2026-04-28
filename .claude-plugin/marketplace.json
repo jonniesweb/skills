@@ -38,6 +38,13 @@
       "description": "LLM-guided optimizer for any text artifact using the gepa CLI",
       "version": "0.1.0",
       "keywords": ["optimization", "gepa", "benchmarking", "evaluator"]
+    },
+    {
+      "name": "worktree",
+      "source": "./worktree",
+      "description": "Git worktree workflow skills: fix in a worktree + PR, rebase onto origin/main",
+      "version": "0.1.0",
+      "keywords": ["git", "worktree", "rebase", "pr"]
     }
   ]
 }
