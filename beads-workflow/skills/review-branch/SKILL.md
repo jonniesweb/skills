@@ -7,7 +7,16 @@ description: Review code changes in the current branch for issues
 
 Review the code modified in this branch for bugs, redundant code, or obvious overcomplication.
 
-## Instructions
+## Always run in a subagent
+
+This skill MUST be executed via a subagent — not in the main conversation context. The diff and per-file review work are large and would pollute the main context. When this skill is invoked, immediately dispatch a single subagent (e.g. `Agent` with `subagent_type=general-purpose`, or `superpowers:code-reviewer` if available) to carry out the steps below, and have it return a concise summary plus the list of filed beads issue IDs.
+
+The main agent should:
+1. Spawn the subagent with the instructions in this file plus any user-provided focus areas.
+2. Wait for the subagent's report.
+3. Relay the summary and beads issue IDs back to the user. Do not re-review files in the main context.
+
+## Instructions (for the subagent)
 
 1. Get the diff of changes in this branch compared to main:
    - Run `git diff origin/main...HEAD` to see all changes
@@ -27,4 +36,4 @@ Review the code modified in this branch for bugs, redundant code, or obvious ove
      - File and line references
      - Suggested fix if applicable
      - Note whether it's existing or new
-4. Summarize findings at the end
+4. Return a summary of findings plus the filed beads issue IDs.
