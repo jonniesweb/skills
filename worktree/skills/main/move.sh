@@ -46,4 +46,3 @@ git worktree remove "$src"
 git checkout "$branch"
 
 echo "moved $branch into $main; removed $src"
-echo "restart any dev server running against $main to pick up the branch change"
