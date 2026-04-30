@@ -1,10 +1,17 @@
 ---
 name: main
-description: Checkout the current worktree's branch in the main worktree.
+description: Move a sibling worktree's branch into the main checkout, then remove the worktree.
 ---
 
-Guard: confirm you are in a linked git worktree, not the main checkout. Compare `git rev-parse --git-dir` and `git rev-parse --git-common-dir` — if they resolve to the same path, you're already in the main worktree. Stop and tell the user they're not on a worktree.
+Identify the source worktree (the one whose branch should land in main):
 
-Capture the current branch (`git rev-parse --abbrev-ref HEAD`), the current worktree path (`git rev-parse --show-toplevel`), and the main worktree path (the first `worktree` line of `git worktree list --porcelain`).
+- If `git rev-parse --git-dir` ≠ `git rev-parse --git-common-dir`, you're in a linked worktree — that is the source.
+- Otherwise (you're in the main checkout already), pick the source from `git worktree list`. If only one linked worktree exists, use it. If several, infer from session context (the branch the user just merged/PR'd, the worktree they were just working in) and confirm with the user before doing anything destructive — do not ask them to pick blindly from a long list.
 
-The branch can't be checked out in two worktrees at once, so the current worktree must be removed first. From the main worktree: `git worktree remove <current-worktree-path>`, then `git checkout <branch>`.
+Capture: source branch (`git -C <src> rev-parse --abbrev-ref HEAD`), source path (`git -C <src> rev-parse --show-toplevel`), main path (first `worktree` line of `git worktree list --porcelain`).
+
+Verify both the source and main are clean: `git -C <path> status --porcelain` must be empty for each. If either is dirty, stop and surface what's uncommitted — never auto-stash, reset, or discard.
+
+A branch can't be checked out in two worktrees at once, so the source worktree must be removed first. `cd` to the main worktree before doing this — removing the directory you're standing in leaves your shell in an invalid cwd. Then: `git worktree remove <src>` followed by `git checkout <branch>`.
+
+After the checkout, remind the user that any dev server running against the main checkout needs to be restarted to pick up the branch change.
